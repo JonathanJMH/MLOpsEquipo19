@@ -1,0 +1,31 @@
+data:
+  filepath: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+  preprocessed: data/processed
+  models: models/
+
+data_adjusted:
+  round_decimals: {'Height' : 2, 'Weight' : 0, 'CH2O' : 0}
+  float_to_int : ['Weight', 'Age', 'FCVC', 'NCP', 'FAF', 'TUE', 'CH2O']
+  int_to_str : ['FCVC', 'NCP', 'FAF', 'TUE', 'CH2O']
+
+split_options:
+  test_size : 0.2
+  val_size : 0.1
+  random_state: 1
+
+features:
+  ordinal: ['FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'CALC']
+  categorical: ['Gender', 'family_history_with_overweight', 'FAVC', 'CAEC', 'SMOKE', 'SCC', 'MTRANS']
+  numerical: ['Height', 'Weight']
+  other: ['Age']
+  target: 'NObeyesdad'
+
+models:
+  gradient_boosting:
+    learnig_rate: 0.1
+    max_depth: 3 
+    n_estimators: 100
+
+mlflow:
+  experiment_name: "Obesity Level Analysis V1"
+  tracking_uri: "http://127.0.0.1:5000"

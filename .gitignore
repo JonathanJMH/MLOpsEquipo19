@@ -1,6 +1,5 @@
 # Data
-#data/
-data/
+/data/
 # Data
 #!data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
 #!data/preprocessed/data.csv

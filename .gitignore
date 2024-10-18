@@ -2,8 +2,8 @@
 #data/
 data/
 # Data
-!data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
-!data/preprocessed/data.csv
+#!data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+#!data/preprocessed/data.csv
 
 # Excepto los archivos .dvc
 !data/**/*.dvc

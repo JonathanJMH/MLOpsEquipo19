@@ -1,7 +1,10 @@
 data:
   filepath: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
-  preprocessed: data/processed
+  processed: data/processed
   models: models/
+  X_train : data/processed/X_train.csv
+  y_train : data/processed/y_train.csv
+
 
 data_adjusted:
   round_decimals: {'Height' : 2, 'Weight' : 0, 'CH2O' : 0}
@@ -20,16 +23,16 @@ features:
   other: ['Age']
   target: 'NObeyesdad'
 
-model_global_options:
-  model_random_state : 1
+model_and_data_global_options:
+  random_state : 1
   
 models:
-  gradient_boosting:
+  gradient_boosting :
     learnig_rate: [0.01, 0.1, 0.2]
     max_depth: [3, 5, 7]
     n_estimators: [100, 200]
     random_state : 1
-  logistic_regession:
+  logistic_regression :
     multi_class : 'multinomial'
     solver : ['lbfgs', 'saga']
     max_iter : 1000
@@ -52,8 +55,9 @@ models:
     weights: ['uniform', 'distance']
     p: [1, 2]
 
+version : 
 
 
 mlflow:
-  experiment_name: "Obesity Level Analysis V1"
+  experiment_name: "Obesity_Level_Model_Analysis"
   tracking_uri: "http://localhost:5000"

@@ -40,7 +40,7 @@ class ModelTrainer:
     
     def train_and_evaluate(self,X_train,y_train):
         best_model = None
-        best_score = float('inf')
+        best_score = 0
         best_model_name = ""
         best_params = {}
         best_run_id = None
@@ -94,16 +94,15 @@ class ModelTrainer:
     
     def log_model_and_metrics(self, model, X_train, y_train, model_name, best_params, accuracy):
         mlflow.set_experiment(self.experiment_name)
-        with mlflow.start_run(run_name = model_name):
-            run = mlflow.start_run(run_name = model_name)
-            run_id = run.info.run_id 
+        with mlflow.start_run(run_name=model_name) as run:  # Usa el contexto como 'run'
+            run_id = run.info.run_id
 
             input_example = X_train.head(1)
 
             mlflow.log_params(best_params)
             mlflow.set_tag('model_name', model_name)
 
-            y_train_pred = model.predic(X_train)
+            y_train_pred = model.predict(X_train)
             train_accuracy = accuracy_score(y_train,y_train_pred)
             train_prec = precision_score(y_train,y_train_pred, average='weighted')
             train_rec = recall_score(y_train,y_train_pred, average='weighted')
@@ -158,6 +157,6 @@ if __name__ == '__main__':
     parser.add_argument("--params", type=str, default="params.yaml", help="Path to params.yaml")
     args = parser.parse_args()
     params = load_params()
-
+    MLFLOW_TRACKING_URI = params['mlflow']['tracking_uri']
     Trainer = ModelTrainer(args.X_train_path, args.y_train_path, params)
     Trainer.run_trainer()

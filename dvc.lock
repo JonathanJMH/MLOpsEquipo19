@@ -1,0 +1,200 @@
+schema: '2.0'
+stages:
+  prepare_data:
+    cmd: python -m refactoring.preprocessing.data_preparation --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv
+      --output_dir data\processed --params params.yaml
+    deps:
+    - path: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+      hash: md5
+      md5: aff636fcccdf0a24ed7186e48bad2548
+      size: 263646
+    - path: params.yaml
+      hash: md5
+      md5: e2277e7e93b0b61d69e90aa69451643c
+      size: 1646
+    - path: refactoring/preprocessing/data_preparation.py
+      hash: md5
+      md5: 3670c2d4c9a0c6cad05616d503aed48c
+      size: 11254
+    params:
+      params.yaml:
+        data_adjusted:
+          round_decimals:
+            Height: 2
+            Weight: 0
+            CH2O: 0
+          float_to_int:
+          - Weight
+          - Age
+          - FCVC
+          - NCP
+          - FAF
+          - TUE
+          - CH2O
+          int_to_str:
+          - FCVC
+          - NCP
+          - FAF
+          - TUE
+          - CH2O
+        features:
+          ordinal:
+          - FCVC
+          - NCP
+          - CH2O
+          - FAF
+          - TUE
+          - CALC
+          categorical:
+          - Gender
+          - family_history_with_overweight
+          - FAVC
+          - CAEC
+          - SMOKE
+          - SCC
+          - MTRANS
+          numerical:
+          - Height
+          - Weight
+          other:
+          - Age
+          target: NObeyesdad
+        split_options:
+          test_size: 0.2
+          val_size: 0.1
+          random_state: 1
+        version:
+    outs:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: d52c6babcfae9b95086c8de9a441d71b
+      size: 62722
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 092d2db33c9828c14245ccc58a028113
+      size: 224694
+    - path: data/processed/X_val.csv
+      hash: md5
+      md5: 135334f1795679250979d460611a51d0
+      size: 25183
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: e91cb9c098499c3c1f7bb837203bfdf3
+      size: 7764
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: 5cdd57ad10cd699fc5d6f589121f56b8
+      size: 27629
+    - path: data/processed/y_val.csv
+      hash: md5
+      md5: 65b979250f16a0a64842118dc2a00a10
+      size: 3047
+  train_model:
+    cmd: python -m refactoring.modeling.train --X_train_path data/processed/X_train.csv
+      --y_train_path data/processed/y_train.csv --params params.yaml
+    deps:
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 092d2db33c9828c14245ccc58a028113
+      size: 224694
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: e91cb9c098499c3c1f7bb837203bfdf3
+      size: 7764
+    - path: params.yaml
+      hash: md5
+      md5: e2277e7e93b0b61d69e90aa69451643c
+      size: 1646
+    - path: refactoring/modeling/train.py
+      hash: md5
+      md5: 700a07a7bf60c83c71e82bdb1b1c1ea1
+      size: 6676
+    params:
+      params.yaml:
+        mlflow:
+          experiment_name: Obesity_Level_Model_Analysis
+          tracking_uri: http://localhost:5000
+        models:
+          gradient_boosting:
+            learning_rate:
+            - 0.01
+            - 0.1
+            - 0.2
+            max_depth:
+            - 3
+            - 5
+            - 7
+            n_estimators:
+            - 100
+            - 200
+            random_state:
+            - 1
+          logistic_regression:
+            multi_class:
+            - multinomial
+            solver:
+            - lbfgs
+            - saga
+            max_iter:
+            - 1000
+            random_state:
+            - 1
+            C:
+            - 0.1
+            - 1
+            - 10
+            - 100
+          svm:
+            probability:
+            - true
+            random_state:
+            - 1
+            C:
+            - 0.1
+            - 1
+            - 10
+            kernel:
+            - linear
+            - rbf
+            gamma:
+            - 1
+            - 0.1
+            - 0.01
+          random_forest:
+            random_state:
+            - 1
+            n_estimators:
+            - 100
+            - 200
+            - 300
+            max_depth:
+            - None
+            - 10
+            - 20
+            - 30
+            min_samples_split:
+            - 2
+            - 5
+            - 10
+            min_samples_leaf:
+            - 1
+            - 2
+            - 4
+          k_neighbors:
+            n_neighbors:
+            - 3
+            - 5
+            - 7
+            - 9
+            weights:
+            - uniform
+            - distance
+            p:
+            - 1
+            - 2
+        version:
+    outs:
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 43ba941648fa6d02f80a8c07a2429ade
+      size: 2367708

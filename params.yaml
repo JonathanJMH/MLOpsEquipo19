@@ -28,31 +28,31 @@ model_and_data_global_options:
   
 models:
   gradient_boosting :
-    learnig_rate: [0.01, 0.1, 0.2]
+    learning_rate: [0.01, 0.1, 0.2]
     max_depth: [3, 5, 7]
     n_estimators: [100, 200]
-    random_state : 1
+    random_state : [1]
   logistic_regression :
-    multi_class : 'multinomial'
+    multi_class : ['multinomial']
     solver : ['lbfgs', 'saga']
-    max_iter : 1000
-    random_state : 1
+    max_iter : [1000]
+    random_state : [1]
     C: [0.1, 1, 10, 100]
   svm :
-    probability : True
-    random_state : 1
+    probability : [True]
+    random_state : [1]
     C: [0.1, 1, 10]
     kernel: ['linear', 'rbf']
     gamma: [1, 0.1, 0.01]
   random_forest :
-    random_state : 1
+    random_state : [1]
     n_estimators : [100, 200, 300]
-    max_depth : [10, 20, 30, None]
+    max_depth : [None, 10, 20, 30]
     min_samples_split : [2, 5, 10]
     min_samples_leaf : [1, 2, 4]
   k_neighbors :
-    n_neighbors: [3, 5, 7, 9]
-    weights: ['uniform', 'distance']
+    n_neighbors : [3, 5, 7, 9]
+    weights : ['uniform', 'distance']
     p: [1, 2]
 
 version : 

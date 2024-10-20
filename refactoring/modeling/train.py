@@ -156,7 +156,7 @@ if __name__ == '__main__':
     parser.add_argument("--y_train_path", type=str, help="Path to y_train.csv")
     parser.add_argument("--params", type=str, default="params.yaml", help="Path to params.yaml")
     args = parser.parse_args()
-    params = load_params()
+    params = load_params(args.params)
     MLFLOW_TRACKING_URI = params['mlflow']['tracking_uri']
     Trainer = ModelTrainer(args.X_train_path, args.y_train_path, params)
     Trainer.run_trainer()

@@ -10,8 +10,8 @@ stages:
       size: 263646
     - path: params.yaml
       hash: md5
-      md5: e2277e7e93b0b61d69e90aa69451643c
-      size: 1646
+      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      size: 1691
     - path: refactoring/preprocessing/data_preparation.py
       hash: md5
       md5: 3670c2d4c9a0c6cad05616d503aed48c
@@ -103,16 +103,17 @@ stages:
       size: 7764
     - path: params.yaml
       hash: md5
-      md5: e2277e7e93b0b61d69e90aa69451643c
-      size: 1646
+      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      size: 1691
     - path: refactoring/modeling/train.py
       hash: md5
-      md5: 700a07a7bf60c83c71e82bdb1b1c1ea1
-      size: 6676
+      md5: 1eb39548fcc36d1eeaf39a8fd64efab1
+      size: 6745
     params:
       params.yaml:
         mlflow:
           experiment_name: Obesity_Level_Model_Analysis
+          test_name: Obesity_Level_Model_Testing
           tracking_uri: http://localhost:5000
         models:
           gradient_boosting:
@@ -198,3 +199,43 @@ stages:
       hash: md5
       md5: 43ba941648fa6d02f80a8c07a2429ade
       size: 2367708
+  test_model:
+    cmd: python -m refactoring.test.evaluate --X_test_path data/processed/X_test.csv
+      --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
+    deps:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: d52c6babcfae9b95086c8de9a441d71b
+      size: 62722
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: e91cb9c098499c3c1f7bb837203bfdf3
+      size: 7764
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 43ba941648fa6d02f80a8c07a2429ade
+      size: 2367708
+    - path: params.yaml
+      hash: md5
+      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      size: 1691
+    - path: refactoring/test/evaluate.py
+      hash: md5
+      md5: 1994b845ff24644735a60441dc6876ac
+      size: 4509
+    params:
+      params.yaml:
+        mlflow:
+          experiment_name: Obesity_Level_Model_Analysis
+          test_name: Obesity_Level_Model_Testing
+          tracking_uri: http://localhost:5000
+        version:
+    outs:
+    - path: data/predictions/predictions.csv
+      hash: md5
+      md5: a034d522919202a2c057841e46138257
+      size: 15099
+    - path: metrics/evaluation.json
+      hash: md5
+      md5: d3d0105a03a0001c5207d24b4d41c197
+      size: 94

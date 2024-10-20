@@ -31,3 +31,17 @@ stages:
     - models
     - mlflow
     - version
+  test_model:
+    cmd : python -m refactoring.test.evaluate --X_test_path data/processed/X_test.csv --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
+    deps:
+    - refactoring/test/evaluate.py
+    - data/processed/X_test.csv
+    - data/processed/y_test.csv
+    - params.yaml
+    - models/best_model.pkl
+    outs:
+    - metrics/evaluation.json
+    - data/predictions/predictions.csv
+    params:
+    - version
+    - mlflow

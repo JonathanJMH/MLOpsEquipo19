@@ -6,12 +6,20 @@ import argparse
 import json
 import joblib
 
+from refactoring.config.load_params import load_params
+
 class ModelEvaluator:
-    def __init__(self, X_test_path, y_test_path, model_path):
+    def __init__(self, X_test_path, y_test_path, params,model_path):
         self.X_test_path = X_test_path
         self.y_test_path = y_test_path
-        self.param = model_path
-        self.experiment_name = self.params['mlflow']['experiment_name'] + self.version_suffix
+        self.model_path = model_path
+        self.params = params
+        self.initialize_params()
+
+    def initialize_params(self):
+        self.version = self.params['version']
+        self.version_suffix = f"_{self.version}" if self.version is not None else ""
+        self.experiment_name = self.params['mlflow']['test_name'] + self.version_suffix
 
     def load_data(self):
         try:
@@ -40,8 +48,8 @@ class ModelEvaluator:
         y_pred = model.predict(X_test)
 
         accuracy = accuracy_score(y_test, y_pred)
-        precision = precision_score(y_test, y_pred)
-        recall = recall_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred,average='weighted')
+        recall = recall_score(y_test, y_pred, average='weighted')
 
         return accuracy, precision, recall, y_pred
 
@@ -51,7 +59,8 @@ class ModelEvaluator:
         mlflow.log_metric("test_recall", recall)
 
     def log_predictions(self, y_test, y_pred):
-        pred_df = pd.DataFrame({"actual": y_test.values.ravel(), "predicted": y_pred})
+        os.makedirs("data/predictions", exist_ok=True)
+        pred_df = pd.DataFrame({"actual": y_test.ravel(), "predicted": y_pred})
         pred_df.to_csv("data/predictions/predictions.csv", index=False)
         mlflow.log_artifact("data/predictions/predictions.csv")
 
@@ -96,8 +105,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Evaluate model")
     parser.add_argument("--X_test_path", type=str, help="Path to X_test.csv")
     parser.add_argument("--y_test_path", type=str, help="Path to y_test.csv")
+    parser.add_argument("--params", type=str, default="params.yaml", help="Path to params.yaml")
     parser.add_argument("--model_path", type=str, help="Path to the best model file")
     args = parser.parse_args()
-
-    me = ModelEvaluator(args.X_test_path, args.y_test_path, args.model_path)
+    params = load_params(args.params)
+    me = ModelEvaluator(args.X_test_path, args.y_test_path, params, args.model_path)
     me.run_evaluation()

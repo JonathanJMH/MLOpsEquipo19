@@ -60,4 +60,5 @@ version :
 
 mlflow:
   experiment_name: "Obesity_Level_Model_Analysis"
+  test_name : 'Obesity_Level_Model_Testing'
   tracking_uri: "http://localhost:5000"

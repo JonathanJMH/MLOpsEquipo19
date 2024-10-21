@@ -1,7 +1,10 @@
 data:
   filepath: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
-  preprocessed: data/processed
+  processed: data/processed
   models: models/
+  X_train : data/processed/X_train.csv
+  y_train : data/processed/y_train.csv
+
 
 data_adjusted:
   round_decimals: {'Height' : 2, 'Weight' : 0, 'CH2O' : 0}
@@ -20,12 +23,42 @@ features:
   other: ['Age']
   target: 'NObeyesdad'
 
+model_and_data_global_options:
+  random_state : 1
+  
 models:
-  gradient_boosting:
-    learnig_rate: 0.1
-    max_depth: 3 
-    n_estimators: 100
+  gradient_boosting :
+    learning_rate: [0.01, 0.1, 0.2]
+    max_depth: [3, 5, 7]
+    n_estimators: [100, 200]
+    random_state : [1]
+  logistic_regression :
+    multi_class : ['multinomial']
+    solver : ['lbfgs', 'saga']
+    max_iter : [1000]
+    random_state : [1]
+    C: [0.1, 1, 10, 100]
+  svm :
+    probability : [True]
+    random_state : [1]
+    C: [0.1, 1, 10]
+    kernel: ['linear', 'rbf']
+    gamma: [1, 0.1, 0.01]
+  random_forest :
+    random_state : [1]
+    n_estimators : [100, 200, 300]
+    max_depth : [None, 10, 20, 30]
+    min_samples_split : [2, 5, 10]
+    min_samples_leaf : [1, 2, 4]
+  k_neighbors :
+    n_neighbors : [3, 5, 7, 9]
+    weights : ['uniform', 'distance']
+    p: [1, 2]
+
+version : 
+
 
 mlflow:
-  experiment_name: "Obesity Level Analysis V1"
-  tracking_uri: "http://127.0.0.1:5000"
+  experiment_name: "Obesity_Level_Model_Analysis"
+  test_name : 'Obesity_Level_Model_Testing'
+  tracking_uri: "http://localhost:5000"

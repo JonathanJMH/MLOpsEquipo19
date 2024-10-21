@@ -1,0 +1,241 @@
+schema: '2.0'
+stages:
+  prepare_data:
+    cmd: python -m refactoring.preprocessing.data_preparation --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv
+      --output_dir data\processed --params params.yaml
+    deps:
+    - path: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+      hash: md5
+      md5: aff636fcccdf0a24ed7186e48bad2548
+      size: 263646
+    - path: params.yaml
+      hash: md5
+      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      size: 1691
+    - path: refactoring/preprocessing/data_preparation.py
+      hash: md5
+      md5: 3670c2d4c9a0c6cad05616d503aed48c
+      size: 11254
+    params:
+      params.yaml:
+        data_adjusted:
+          round_decimals:
+            Height: 2
+            Weight: 0
+            CH2O: 0
+          float_to_int:
+          - Weight
+          - Age
+          - FCVC
+          - NCP
+          - FAF
+          - TUE
+          - CH2O
+          int_to_str:
+          - FCVC
+          - NCP
+          - FAF
+          - TUE
+          - CH2O
+        features:
+          ordinal:
+          - FCVC
+          - NCP
+          - CH2O
+          - FAF
+          - TUE
+          - CALC
+          categorical:
+          - Gender
+          - family_history_with_overweight
+          - FAVC
+          - CAEC
+          - SMOKE
+          - SCC
+          - MTRANS
+          numerical:
+          - Height
+          - Weight
+          other:
+          - Age
+          target: NObeyesdad
+        split_options:
+          test_size: 0.2
+          val_size: 0.1
+          random_state: 1
+        version:
+    outs:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: d52c6babcfae9b95086c8de9a441d71b
+      size: 62722
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 092d2db33c9828c14245ccc58a028113
+      size: 224694
+    - path: data/processed/X_val.csv
+      hash: md5
+      md5: 135334f1795679250979d460611a51d0
+      size: 25183
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: e91cb9c098499c3c1f7bb837203bfdf3
+      size: 7764
+    - path: data/processed/y_train.csv
+      hash: md5
+      md5: 5cdd57ad10cd699fc5d6f589121f56b8
+      size: 27629
+    - path: data/processed/y_val.csv
+      hash: md5
+      md5: 65b979250f16a0a64842118dc2a00a10
+      size: 3047
+  train_model:
+    cmd: python -m refactoring.modeling.train --X_train_path data/processed/X_train.csv
+      --y_train_path data/processed/y_train.csv --params params.yaml
+    deps:
+    - path: data/processed/X_train.csv
+      hash: md5
+      md5: 092d2db33c9828c14245ccc58a028113
+      size: 224694
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: e91cb9c098499c3c1f7bb837203bfdf3
+      size: 7764
+    - path: params.yaml
+      hash: md5
+      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      size: 1691
+    - path: refactoring/modeling/train.py
+      hash: md5
+      md5: 1eb39548fcc36d1eeaf39a8fd64efab1
+      size: 6745
+    params:
+      params.yaml:
+        mlflow:
+          experiment_name: Obesity_Level_Model_Analysis
+          test_name: Obesity_Level_Model_Testing
+          tracking_uri: http://localhost:5000
+        models:
+          gradient_boosting:
+            learning_rate:
+            - 0.01
+            - 0.1
+            - 0.2
+            max_depth:
+            - 3
+            - 5
+            - 7
+            n_estimators:
+            - 100
+            - 200
+            random_state:
+            - 1
+          logistic_regression:
+            multi_class:
+            - multinomial
+            solver:
+            - lbfgs
+            - saga
+            max_iter:
+            - 1000
+            random_state:
+            - 1
+            C:
+            - 0.1
+            - 1
+            - 10
+            - 100
+          svm:
+            probability:
+            - true
+            random_state:
+            - 1
+            C:
+            - 0.1
+            - 1
+            - 10
+            kernel:
+            - linear
+            - rbf
+            gamma:
+            - 1
+            - 0.1
+            - 0.01
+          random_forest:
+            random_state:
+            - 1
+            n_estimators:
+            - 100
+            - 200
+            - 300
+            max_depth:
+            - None
+            - 10
+            - 20
+            - 30
+            min_samples_split:
+            - 2
+            - 5
+            - 10
+            min_samples_leaf:
+            - 1
+            - 2
+            - 4
+          k_neighbors:
+            n_neighbors:
+            - 3
+            - 5
+            - 7
+            - 9
+            weights:
+            - uniform
+            - distance
+            p:
+            - 1
+            - 2
+        version:
+    outs:
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 43ba941648fa6d02f80a8c07a2429ade
+      size: 2367708
+  test_model:
+    cmd: python -m refactoring.test.evaluate --X_test_path data/processed/X_test.csv
+      --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
+    deps:
+    - path: data/processed/X_test.csv
+      hash: md5
+      md5: d52c6babcfae9b95086c8de9a441d71b
+      size: 62722
+    - path: data/processed/y_test.csv
+      hash: md5
+      md5: e91cb9c098499c3c1f7bb837203bfdf3
+      size: 7764
+    - path: models/best_model.pkl
+      hash: md5
+      md5: 43ba941648fa6d02f80a8c07a2429ade
+      size: 2367708
+    - path: params.yaml
+      hash: md5
+      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      size: 1691
+    - path: refactoring/test/evaluate.py
+      hash: md5
+      md5: 1994b845ff24644735a60441dc6876ac
+      size: 4509
+    params:
+      params.yaml:
+        mlflow:
+          experiment_name: Obesity_Level_Model_Analysis
+          test_name: Obesity_Level_Model_Testing
+          tracking_uri: http://localhost:5000
+        version:
+    outs:
+    - path: data/predictions/predictions.csv
+      hash: md5
+      md5: a034d522919202a2c057841e46138257
+      size: 15099
+    - path: metrics/evaluation.json
+      hash: md5
+      md5: d3d0105a03a0001c5207d24b4d41c197
+      size: 94

@@ -106,6 +106,8 @@ class DataPreprocessor():
         return self
     
     def initialize_params(self):
+        self.data_version = self.params['version']
+
         self.round_decimals = self.params['data_adjusted']['round_decimals']
         self.float_to_int = self.params['data_adjusted']['float_to_int']
         self.int_to_str = self.params['data_adjusted']['int_to_str']
@@ -240,12 +242,11 @@ if __name__ == '__main__':
     parser.add_argument('--data_path', type = str, help = 'Path of raw data')
     parser.add_argument("--output_dir", type = str, help = "Directory for processed data")  
     parser.add_argument("--params", type = str, default = "params.yaml", help="Path to params.yaml") 
-    parser.add_argument("--data_version", type = str, default = None, help = "Version of the Processed Data") 
     args = parser.parse_args()     
 
     params = load_params(args.params)
-    data_f = params['data']['filepath']
-    data_preprocessor = DataPreprocessor(args.data_path, args.output_dir, params, args.data_version)
+
+    data_preprocessor = DataPreprocessor(args.data_path, args.output_dir, params)
     data_preprocessor.load_data()
     data_preprocessor.preprocess_data()
 

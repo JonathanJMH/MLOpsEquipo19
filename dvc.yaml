@@ -1,6 +1,7 @@
 stages:
-  load_data:
-    cmd: python refactoring/preprocessing/data_preparation.py --data_path data/raw/ObesityDataSet_raw_and_data_sinthetic.csv --output_dir data/processed --params params.yaml
+  prepare_data:
+    #cmd: python -m refactoring/preprocessing/data_preparation --data_path data/raw/ObesityDataSet_raw_and_data_sinthetic.csv --output_dir data/processed --params params.yaml
+    cmd : python -m refactoring.preprocessing.data_preparation --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv --output_dir data\processed --params params.yaml
     deps:
     - data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
     - refactoring/preprocessing/data_preparation.py
@@ -16,3 +17,31 @@ stages:
      - data_adjusted
      - split_options
      - features
+     - version
+  train_model:
+    cmd : python -m refactoring.modeling.train --X_train_path data/processed/X_train.csv --y_train_path data/processed/y_train.csv --params params.yaml
+    deps:
+    - refactoring/modeling/train.py
+    - data/processed/X_train.csv
+    - data/processed/y_test.csv
+    - params.yaml
+    outs :
+    - models/best_model.pkl
+    params:
+    - models
+    - mlflow
+    - version
+  test_model:
+    cmd : python -m refactoring.test.evaluate --X_test_path data/processed/X_test.csv --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
+    deps:
+    - refactoring/test/evaluate.py
+    - data/processed/X_test.csv
+    - data/processed/y_test.csv
+    - params.yaml
+    - models/best_model.pkl
+    outs:
+    - metrics/evaluation.json
+    - data/predictions/predictions.csv
+    params:
+    - version
+    - mlflow

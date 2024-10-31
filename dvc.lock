@@ -1,42 +1,23 @@
 schema: '2.0'
 stages:
   prepare_data:
-    cmd: python -m refactoring.preprocessing.data_preparation --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv
+    cmd: python -m refactoring.preprocessing.data_preparation --data_path data\processed\data.csv
       --output_dir data\processed --params params.yaml
     deps:
-    - path: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+    - path: data/processed/data.csv
       hash: md5
-      md5: aff636fcccdf0a24ed7186e48bad2548
-      size: 263646
+      md5: 72454506ae212a7e4af5730c39c73499
+      size: 202927
     - path: params.yaml
       hash: md5
       md5: cc85ec5e48f07d34b8c4a8a803d852b8
       size: 1691
     - path: refactoring/preprocessing/data_preparation.py
       hash: md5
-      md5: 3670c2d4c9a0c6cad05616d503aed48c
-      size: 11254
+      md5: e927e06f398e1c991d1286c74acc21ce
+      size: 6554
     params:
       params.yaml:
-        data_adjusted:
-          round_decimals:
-            Height: 2
-            Weight: 0
-            CH2O: 0
-          float_to_int:
-          - Weight
-          - Age
-          - FCVC
-          - NCP
-          - FAF
-          - TUE
-          - CH2O
-          int_to_str:
-          - FCVC
-          - NCP
-          - FAF
-          - TUE
-          - CH2O
         features:
           ordinal:
           - FCVC
@@ -200,7 +181,7 @@ stages:
       md5: 43ba941648fa6d02f80a8c07a2429ade
       size: 2367708
   test_model:
-    cmd: python -m refactoring.test.evaluate --X_test_path data/processed/X_test.csv
+    cmd: python -m refactoring.evaluation.evaluate --X_test_path data/processed/X_test.csv
       --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
     deps:
     - path: data/processed/X_test.csv
@@ -219,7 +200,7 @@ stages:
       hash: md5
       md5: cc85ec5e48f07d34b8c4a8a803d852b8
       size: 1691
-    - path: refactoring/test/evaluate.py
+    - path: refactoring/evaluation/evaluate.py
       hash: md5
       md5: 1994b845ff24644735a60441dc6876ac
       size: 4509
@@ -239,3 +220,42 @@ stages:
       hash: md5
       md5: d3d0105a03a0001c5207d24b4d41c197
       size: 94
+  load_data:
+    cmd: python -m refactoring.data.load_data --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv
+      --output_dir data\processed --params params.yaml
+    deps:
+    - path: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+      hash: md5
+      md5: aff636fcccdf0a24ed7186e48bad2548
+      size: 263646
+    - path: refactoring/data/load_data.py
+      hash: md5
+      md5: 6e982f033ac5f28596ac4a4f341a55a8
+      size: 5719
+    params:
+      params.yaml:
+        data_adjusted:
+          round_decimals:
+            Height: 2
+            Weight: 0
+            CH2O: 0
+          float_to_int:
+          - Weight
+          - Age
+          - FCVC
+          - NCP
+          - FAF
+          - TUE
+          - CH2O
+          int_to_str:
+          - FCVC
+          - NCP
+          - FAF
+          - TUE
+          - CH2O
+        version:
+    outs:
+    - path: data\processed\data.csv
+      hash: md5
+      md5: 72454506ae212a7e4af5730c39c73499
+      size: 202927

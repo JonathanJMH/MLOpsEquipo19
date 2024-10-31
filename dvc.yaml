@@ -1,9 +1,19 @@
 stages:
-  prepare_data:
-    #cmd: python -m refactoring/preprocessing/data_preparation --data_path data/raw/ObesityDataSet_raw_and_data_sinthetic.csv --output_dir data/processed --params params.yaml
-    cmd : python -m refactoring.preprocessing.data_preparation --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv --output_dir data\processed --params params.yaml
+  load_data:
+    cmd : python -m refactoring.data.load_data --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv --output_dir data\processed --params params.yaml
     deps:
     - data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+    - refactoring/data/load_data.py
+    outs:
+    - data\processed\data.csv
+    params:
+    - version
+    - data_adjusted
+  prepare_data:
+    #cmd: python -m refactoring/preprocessing/data_preparation --data_path data/raw/ObesityDataSet_raw_and_data_sinthetic.csv --output_dir data/processed --params params.yaml
+    cmd : python -m refactoring.preprocessing.data_preparation --data_path data\processed\data.csv --output_dir data\processed --params params.yaml
+    deps:
+    - data/processed/data.csv
     - refactoring/preprocessing/data_preparation.py
     - params.yaml
     outs:
@@ -14,7 +24,6 @@ stages:
       - data/processed/y_test.csv
       - data/processed/y_val.csv
     params:
-     - data_adjusted
      - split_options
      - features
      - version
@@ -32,9 +41,9 @@ stages:
     - mlflow
     - version
   test_model:
-    cmd : python -m refactoring.test.evaluate --X_test_path data/processed/X_test.csv --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
+    cmd : python -m refactoring.evaluation.evaluate --X_test_path data/processed/X_test.csv --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
     deps:
-    - refactoring/test/evaluate.py
+    - refactoring/evaluation/evaluate.py
     - data/processed/X_test.csv
     - data/processed/y_test.csv
     - params.yaml

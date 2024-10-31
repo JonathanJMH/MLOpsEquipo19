@@ -1,0 +1,123 @@
+paths:
+  raw: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+  data: data/processed/data.csv
+
+version:
+
+data_adjusted:
+  round_decimals: {'Height' : 2, 'Weight' : 0, 'CH2O' : 0}
+  float_to_int : ['Weight', 'Age', 'FCVC', 'NCP', 'FAF', 'TUE', 'CH2O']
+  int_to_str : ['FCVC', 'NCP', 'FAF', 'TUE', 'CH2O']
+
+data_schema:
+  Gender:
+    dtype: object
+    allowed_values: 
+      - 'Female'
+      - 'Male'
+  Age:
+    range:
+      min: 14.0
+      max: 61.0
+    dtype: float
+  Height:
+    range:
+      min: 1.45
+      max: 1.98
+    dtype: float
+  Weight:
+    range:
+      min: 39.0
+      max: 173.0
+    dtype: float
+  family_history_with_overweight:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  FAVC:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  FCVC:
+    range:
+      min: 1.0
+      max: 3.0
+    dtype: float
+  NCP:
+    range:
+      min: 1.0
+      max: 4.0
+    dtype: float
+  CAEC:
+    dtype: object
+    allowed_values:
+      - 'Sometimes'
+      - 'Frequently'
+      - 'Always'
+      - 'no'
+  SMOKE:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  CH2O:
+    range:
+      min: 1.0
+      max: 3.0
+    dtype: float
+  SCC:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  FAF:
+    range:
+      min: 0.0
+      max: 3.0
+    dtype: float
+  TUE:
+    range:
+      min: 0.0
+      max: 2.0
+    dtype: float
+  CALC:
+    dtype: object
+    allowed_values:
+      - 'no'
+      - 'Sometimes'
+      - 'Frequently'
+      - 'Always'
+  MTRANS:
+    dtype: object
+    allowed_values:
+      - 'Public_Transportation'
+      - 'Walking'
+      - 'Automobile'
+      - 'Motorbike'
+      - 'Bike'
+  NObeyesdad:
+    dtype: object
+    allowed_values: 
+      - 'Normal_Weight'
+      - 'Overweight_Level_I'
+      - 'Overweight_Level_II'
+      - 'Obesity_Type_I'
+      - 'Insufficient_Weight'
+      - 'Obesity_Type_II'
+      - 'Obesity_Type_III'
+
+split_options:
+  test_size : 0.2
+  val_size : 0.1
+  random_state: 1
+
+features:
+  ordinal: ['FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'CALC']
+  categorical: ['Gender', 'family_history_with_overweight', 'FAVC', 'CAEC', 'SMOKE', 'SCC', 'MTRANS']
+  numerical: ['Height', 'Weight']
+  other: ['Age']
+  target: 'NObeyesdad'
+
+params:
+  - data
+  - data_adjusted
+  - split_options
+  - features
+  - model_and_data_global_options
+  - models
+  - version
+  - mlflow

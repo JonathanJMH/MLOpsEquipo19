@@ -1,60 +1,66 @@
-# obesity_levels_ml
+# MLOps Project
 
 <a target="_blank" href="https://cookiecutter-data-science.drivendata.org/">
     <img src="https://img.shields.io/badge/CCDS-Project%20template-328F97?logo=cookiecutter" />
 </a>
-
-Proyecto MLOps
+<a target="_blank" href="https://www.python.org/">
+    <img src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=ffffff" alt="Python" />
+</a>
+<a target="_blank" href="https://dvc.org/">
+    <img src="https://img.shields.io/badge/DVC-3BBF8C?logo=data-vault&logoColor=ffffff" alt="DVC" />
+</a>
+<a target="_blank" href="https://mlflow.org/">
+    <img src="https://img.shields.io/badge/MLflow-FF4A1C?logo=mlflow&logoColor=ffffff" alt="MLflow" />
+</a>
+<a target="_blank" href="https://jupyter.org/">
+    <img src="https://img.shields.io/badge/Jupyter-DA5B1E?logo=jupyter&logoColor=ffffff" alt="Jupyter Notebook" />
+</a>
+<a target="_blank" href="https://mlops.org/">
+    <img src="https://img.shields.io/badge/MLOps-1C8FFF?logo=mlops&logoColor=ffffff" alt="MLOps" />
+</a>
 
 ## Project Organization
 
 ```
-├── LICENSE            <- Open-source license if one is chosen
-├── Makefile           <- Makefile with convenience commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
+├── LICENSE
+├── Makefile
+├── params.yaml
+├── README.md
+├── .dvc/
+├── .vscode/
 ├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default mkdocs project; see www.mkdocs.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
-├── pyproject.toml     <- Project configuration file with package metadata for 
-│                         refactoring and configuration for tools like black
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── setup.cfg          <- Configuration file for flake8
-│
-└── refactoring   <- Source code for use in this project.
-    │
-    ├── __init__.py             <- Makes refactoring a Python module
-    │
-    ├── config.py               <- Store useful variables and configuration
-    │
-    ├── dataset.py              <- Scripts to download or generate data
-    │
-    ├── features.py             <- Code to create features for modeling
-    │
-    ├── modeling                
-    │   ├── __init__.py 
-    │   ├── predict.py          <- Code to run model inference with trained models          
-    │   └── train.py            <- Code to train models
-    │
-    └── plots.py                <- Code to create visualizations
+│   ├── external/       
+│   ├── interim/
+│   ├── predictions/
+│   ├── processed/      
+│   └── raw/
+├── docs/
+├── metrics/
+├── mlruns/
+├── models/
+├── notebooks/
+├── refactoring
+│   ├── obesity_refactored_v1.py
+│   ├── __init__.py
+│   ├── config
+│   │   ├── load_params.py
+│   │   └── __init__.py
+│   ├── data
+│   │   ├── load_data.py
+│   │   └── __init_.py
+│   ├── evaluation
+│   │   ├── evaluate.py
+│   │   └── __init__.py
+│   ├── modeling
+│   │   ├── train.py
+│   │   └── __init__.py
+│   ├── plots/
+│   └── preprocessing
+│       ├── data_preparation.py
+│       └── __init__.py
+├── references/
+├── reports/
+└── tests/
 ```
 
 --------

@@ -1,6 +1,7 @@
 paths:
   raw: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
   data: data/processed/data.csv
+  params: params.yaml
 
 version:
 
@@ -121,3 +122,30 @@ params:
   - models
   - version
   - mlflow
+
+output_features: 
+  - Age
+  - Height
+  - Weight
+  - Gender_0
+  - Gender_1
+  - family_history_with_overweight_0
+  - family_history_with_overweight_1
+  - FAVC_0
+  - FAVC_1
+  - CAEC_0
+  - CAEC_1
+  - CAEC_2
+  - SMOKE_0
+  - SMOKE_1
+  - SCC_0
+  - SCC_1
+  - MTRANS_0
+  - MTRANS_1
+  - MTRANS_2
+  - FCVC
+  - NCP
+  - CH2O
+  - FAF
+  - TUE
+  - CALC

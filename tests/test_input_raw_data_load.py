@@ -98,5 +98,22 @@ def test_save_data(data_loader):
     assert os.path.exists(saved_file_path), \
         f"The saved file '{saved_file_path}' does not exist."
 
+def test_mean_std_dev(data_loader):
+    """
+    Test to verify that the numeric data mean equals 0 and standard deviation 1 after preprocessing.
+
+    Args:
+        data_loader (DataLoader): The DataLoader instance used to load the data.
+    """
+    for feature in data_loader.features:
+        if data_loader.data[feature].dtype in [float, int]:
+            mean = data_loader.data[feature].mean()
+            std_dev = data_loader.data[feature].std()
+        
+    assert abs(mean) < 1e-6, f"The mean of '{feature}' is not approximately 0. Found: {mean}"
+    assert abs(std_dev - 1) <= 1e-6, f"The mean of '{feature}' is not approximately 0. Found: {std_dev}"
+
+
+
 if __name__ == "__main__":
     pytest.main([__file__])  # Run the tests when the script is executed

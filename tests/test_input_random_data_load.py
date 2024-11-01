@@ -29,12 +29,24 @@ def setup_data_loader(tmp_path):
     return DataLoader(data_path, output_dir, params)
 
 def test_load_data(setup_data_loader):
+    """
+    Test to verify that data has been loaded correctly.
+
+    Args:
+        setup_data_loader (DataLoader): The DataLoader instance used to load the data.
+    """
     dl = setup_data_loader
     dl.load_data()
     assert not dl.data.empty  # Verifica que los datos se cargaron
     assert list(dl.data.columns) == ['col1', 'col2']  # Verifica las columnas
 
 def test_adjust_data_types(setup_data_loader):
+    """
+    Test to verify that data type has been adjusted correctly.
+
+    Args:
+        setup_data_loader (DataLoader): The DataLoader instance used to load the data.
+    """
     dl = setup_data_loader
     dl.load_data()
     dl.adjust_data_types(round_decimals=dl.round_decimals, float_to_int=dl.float_to_int, int_to_str=dl.int_to_str)
@@ -44,6 +56,12 @@ def test_adjust_data_types(setup_data_loader):
     assert dl.data_ajusted['col1'][0] == 1  # Verifica que se redondeó correctamente
 
 def test_save_data(setup_data_loader):
+    """
+    Test to verify that the processed data is saved correctly to a CSV file.
+
+    Args:
+        setup_data_loader (DataLoader): The DataLoader instance used to load the data.
+    """
     dl = setup_data_loader
     dl.load_data()
     dl.adjust_data_types(round_decimals=dl.round_decimals, float_to_int=dl.float_to_int, int_to_str=dl.int_to_str)

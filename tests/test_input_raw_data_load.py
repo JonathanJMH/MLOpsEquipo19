@@ -98,5 +98,6 @@ def test_save_data(data_loader):
     assert os.path.exists(saved_file_path), \
         f"The saved file '{saved_file_path}' does not exist."
 
+
 if __name__ == "__main__":
     pytest.main([__file__])  # Run the tests when the script is executed

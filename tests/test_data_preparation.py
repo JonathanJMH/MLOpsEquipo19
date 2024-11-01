@@ -135,5 +135,52 @@ def test_save_data(preprocessor):
         assert os.path.exists(path), \
             f"The saved file '{path}' does not exist in the output directory."
 
+def test_mean_std_dev_num_pip(preprocessor):
+    """
+    Test to verify that the data from the "num" pipeline mean equals 0 and standard deviation 1 after preprocessing.
+
+    Args:
+        preprocessor (DataPreprocessor): The DataPreprocessor instance used to preprocess the data.
+    """
+    num_feat = preprocessor.numerical_features 
+    data_num = preprocessor.data_transformer.named_transformers_["num"].transform(preprocessor.data[num_feat])
+    
+    means = data_num.mean(axis=0)
+    std_devs = data_num.std(axis=0)
+
+    # Check each feature individually and provide detailed failure messages
+    for idx, feature in enumerate(num_feat):
+        mean = means[idx]
+        std_dev = std_devs[idx]
+        assert abs(mean) < 1e-6, f"The mean of '{feature}' is not approximately 0. Found: {mean}"
+        assert abs(std_dev - 1) < 1e-6, f"The standard deviation of '{feature}' is not approximately 1. Found: {std_dev}"
+
+def test_mean_std_dev_log_pip(preprocessor):
+    """
+    Test to verify that the data from the "log" pipeline mean equals 0 and standard deviation 1 after preprocessing.
+
+    Args:
+        preprocessor (DataPreprocessor): The DataPreprocessor instance used to preprocess the data.
+    """
+    other_feat = preprocessor.other_features
+    data_other = preprocessor.data_transformer.named_transformers_["log"].transform(preprocessor.data[other_feat])
+
+    mean = data_other.mean()
+    std_dev = data_other.std()
+
+    assert abs(data_other.mean()) < 1e-6, f"The mean of '{data_other}' is not approximately 0. Found: {mean}"
+    assert abs(std_dev - 1) <= 1e-6, f"The standard deviation of '{data_other}' is not approximately 1. Found: {std_dev}"
+
+def test_log_data(preprocessor):
+    """
+    Test to verify that numeric entries from data used in log pipeline are bigger than 0 .
+
+    Args:
+        preprocessor (DataPreprocessor): The DataPreprocessor instance used to preprocess the data.
+    """
+    other = preprocessor.other_features
+
+    assert other.min() > 0, f"Data entries of '{other}' are below 0"
+
 if __name__ == "__main__":
     pytest.main([__file__])  # Run the tests when the script is executed

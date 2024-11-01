@@ -173,7 +173,7 @@ def test_mean_std_dev_log_pip(preprocessor):
 
 def test_log_data(preprocessor):
     """
-    Test to verify that the numeric data u.
+    Test to verify that numeric entries from data used in log pipeline are bigger than 0 .
 
     Args:
         preprocessor (DataPreprocessor): The DataPreprocessor instance used to preprocess the data.

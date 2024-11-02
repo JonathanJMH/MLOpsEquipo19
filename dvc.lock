@@ -1,8 +1,8 @@
 schema: '2.0'
 stages:
   prepare_data:
-    cmd: python -m refactoring.preprocessing.data_preparation --data_path data\processed\data.csv
-      --output_dir data\processed --params params.yaml
+    cmd: python refactoring/preprocessing/data_preparation.py --data_path data/processed/data.csv
+      --output_dir data/processed --params params.yaml
     deps:
     - path: data/processed/data.csv
       hash: md5
@@ -14,8 +14,8 @@ stages:
       size: 1691
     - path: refactoring/preprocessing/data_preparation.py
       hash: md5
-      md5: e927e06f398e1c991d1286c74acc21ce
-      size: 6554
+      md5: 472a96930500098c5255f46e2477064f
+      size: 8232
     params:
       params.yaml:
         features:
@@ -71,7 +71,7 @@ stages:
       md5: 65b979250f16a0a64842118dc2a00a10
       size: 3047
   train_model:
-    cmd: python -m refactoring.modeling.train --X_train_path data/processed/X_train.csv
+    cmd: python refactoring/modeling/train.py --X_train_path data/processed/X_train.csv
       --y_train_path data/processed/y_train.csv --params params.yaml
     deps:
     - path: data/processed/X_train.csv
@@ -88,8 +88,8 @@ stages:
       size: 1691
     - path: refactoring/modeling/train.py
       hash: md5
-      md5: 1eb39548fcc36d1eeaf39a8fd64efab1
-      size: 6745
+      md5: d6e84e4e8a62d133dd0bd96a2fac491c
+      size: 8776
     params:
       params.yaml:
         mlflow:
@@ -178,10 +178,10 @@ stages:
     outs:
     - path: models/best_model.pkl
       hash: md5
-      md5: 43ba941648fa6d02f80a8c07a2429ade
-      size: 2367708
+      md5: 82f5691121661964dc3ce70531017a88
+      size: 1259688
   test_model:
-    cmd: python -m refactoring.evaluation.evaluate --X_test_path data/processed/X_test.csv
+    cmd: python refactoring/evaluation/evaluate.py --X_test_path data/processed/X_test.csv
       --y_test_path data/processed/y_test.csv --params params.yaml --model_path models/best_model.pkl
     deps:
     - path: data/processed/X_test.csv
@@ -194,16 +194,16 @@ stages:
       size: 7764
     - path: models/best_model.pkl
       hash: md5
-      md5: 43ba941648fa6d02f80a8c07a2429ade
-      size: 2367708
+      md5: 82f5691121661964dc3ce70531017a88
+      size: 1259688
     - path: params.yaml
       hash: md5
       md5: cc85ec5e48f07d34b8c4a8a803d852b8
       size: 1691
     - path: refactoring/evaluation/evaluate.py
       hash: md5
-      md5: 1994b845ff24644735a60441dc6876ac
-      size: 4509
+      md5: 41fc2b74bd439b846220a42e491c8dfa
+      size: 7137
     params:
       params.yaml:
         mlflow:
@@ -214,15 +214,15 @@ stages:
     outs:
     - path: data/predictions/predictions.csv
       hash: md5
-      md5: a034d522919202a2c057841e46138257
-      size: 15099
+      md5: 65eae712ac434ef58d820e73885e7d4e
+      size: 15102
     - path: metrics/evaluation.json
       hash: md5
-      md5: d3d0105a03a0001c5207d24b4d41c197
-      size: 94
+      md5: 5f09b2c17f78d86182f1493fd0629314
+      size: 93
   load_data:
-    cmd: python -m refactoring.data.load_data --data_path data\raw\ObesityDataSet_raw_and_data_sinthetic.csv
-      --output_dir data\processed --params params.yaml
+    cmd: python refactoring/data/load_data.py --data_path data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+      --output_dir data/processed --params params.yaml
     deps:
     - path: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
       hash: md5
@@ -230,8 +230,8 @@ stages:
       size: 263646
     - path: refactoring/data/load_data.py
       hash: md5
-      md5: 6e982f033ac5f28596ac4a4f341a55a8
-      size: 5719
+      md5: e6cd558bba18298345c3cb8bcf8e5bd3
+      size: 5693
     params:
       params.yaml:
         data_adjusted:
@@ -255,7 +255,7 @@ stages:
           - CH2O
         version:
     outs:
-    - path: data\processed\data.csv
+    - path: data/processed/data.csv
       hash: md5
       md5: 72454506ae212a7e4af5730c39c73499
       size: 202927

@@ -7,7 +7,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
 # Load test parameters and data schema from the specified configuration file
-params = load_params(r'tests\test_config.yaml')
+params = load_params(r'tests/test_config.yaml')
 data_path = params['paths']['data']  # Path to the data
 data_schema = params['data_schema']  # Schema defining the expected structure and constraints of the data
 

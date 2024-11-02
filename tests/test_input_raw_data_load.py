@@ -6,7 +6,7 @@ from refactoring.config.load_params import load_params
 from refactoring.data.load_data import DataLoader
 
 # Load test parameters and data schema from the specified configuration file
-params = load_params(r'tests\test_config.yaml')
+params = load_params(r'tests/test_config.yaml')
 data_path = params['paths']['raw']  # Path to the raw data
 data_schema = params['data_schema']  # Schema defining the expected structure and constraints of the data
 

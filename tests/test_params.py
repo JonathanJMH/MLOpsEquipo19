@@ -5,7 +5,7 @@ import yaml
 from refactoring.config.load_params import load_params  # Ensure that the function is imported correctly
 
 # Load testing parameters from the specified configuration file
-test_params = load_params(r'tests\test_config.yaml')
+test_params = load_params(r'tests/test_config.yaml')
 
 @pytest.fixture
 def yaml_file():

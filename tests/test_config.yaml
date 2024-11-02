@@ -2,7 +2,18 @@ paths:
   raw: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
   data: data/processed/data.csv
   params: params.yaml
-
+  split_X_data:
+  - data/processed/X_train.csv
+  - data/processed/X_test.csv
+  - data/processed/X_val.csv
+  split_y_data:
+  - data/processed/y_train.csv
+  - data/processed/y_test.csv
+  - data/processed/y_val.csv
+  model_path:
+  - models/best_model.pkl
+  mlflow_runs:
+  - mlruns/models
 version:
 
 data_adjusted:
@@ -149,3 +160,37 @@ output_features:
   - FAF
   - TUE
   - CALC
+
+models:
+  gradient_boosting :
+    learning_rate: [0.01, 0.1, 0.2]
+    max_depth: [3, 5, 7]
+    n_estimators: [100, 200]
+    random_state : [1]
+  logistic_regression :
+    multi_class : ['multinomial']
+    solver : ['lbfgs', 'saga']
+    max_iter : [1000]
+    random_state : [1]
+    C: [0.1, 1, 10, 100]
+  svm :
+    probability : [True]
+    random_state : [1]
+    C: [0.1, 1, 10]
+    kernel: ['linear', 'rbf']
+    gamma: [1, 0.1, 0.01]
+  random_forest :
+    random_state : [1]
+    n_estimators : [100, 200, 300]
+    max_depth : [None, 10, 20, 30]
+    min_samples_split : [2, 5, 10]
+    min_samples_leaf : [1, 2, 4]
+  k_neighbors :
+    n_neighbors : [3, 5, 7, 9]
+    weights : ['uniform', 'distance']
+    p: [1, 2]
+
+mlflow:
+  experiment_name: "Obesity_Level_Model_Analysis"
+  test_name : 'Obesity_Level_Model_Testing'
+  tracking_uri: "http://localhost:5000"

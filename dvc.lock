@@ -10,7 +10,7 @@ stages:
       size: 202927
     - path: params.yaml
       hash: md5
-      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      md5: 4fc9539d9ccd47e8f2e82eec0d25f1c5
       size: 1691
     - path: refactoring/preprocessing/data_preparation.py
       hash: md5
@@ -84,7 +84,7 @@ stages:
       size: 7764
     - path: params.yaml
       hash: md5
-      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      md5: 4fc9539d9ccd47e8f2e82eec0d25f1c5
       size: 1691
     - path: refactoring/modeling/train.py
       hash: md5
@@ -150,10 +150,10 @@ stages:
             - 200
             - 300
             max_depth:
-            - None
             - 10
             - 20
             - 30
+            - None
             min_samples_split:
             - 2
             - 5
@@ -198,7 +198,7 @@ stages:
       size: 1259688
     - path: params.yaml
       hash: md5
-      md5: cc85ec5e48f07d34b8c4a8a803d852b8
+      md5: 4fc9539d9ccd47e8f2e82eec0d25f1c5
       size: 1691
     - path: refactoring/evaluation/evaluate.py
       hash: md5
@@ -259,3 +259,10 @@ stages:
       hash: md5
       md5: 72454506ae212a7e4af5730c39c73499
       size: 202927
+  test_run:
+    cmd: pytest --html=reports/tests/report.html
+    outs:
+    - path: reports/tests/report.html
+      hash: md5
+      md5: 5d41daad3a954431ad3741da643763b6
+      size: 38165

@@ -86,8 +86,9 @@ This project is a full MLOps pipeline that uses DVC for tracking data and models
 
 ### **1. Prerequisites**
 - Docker & Docker Compose
-- Python 3.10.0+ and `pip`
+- Python 3.10+ and `pip`
 - DVC (`pip install dvc`)
+- MLFlow (`pip install mlflow`)
 - **Remote storage** set up for DVC (e.g., S3 or GDrive)
 
 ### **2. Clone the Repository**
@@ -166,3 +167,8 @@ You can monitor **MLflow experiment runs**, metrics, and models, which helps you
 ```bash
 mlflow ui
 ```
+## Governance Practices
+- [Project Governance](docs/docs/GOVERNANCE.md)
+- [Security Policy](docs/docs/SECURITY.md)
+- [Risk Assessent](docs/docs/risk_assessment)
+- [Changelog](docs/docs/CHANGELOG.md)

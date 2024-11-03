@@ -2,7 +2,7 @@
 
 ## Report a Vulnerability
 
-To report a vulnerability, please contact us at [email@example.com]. We commit to investigating all reports and will respond within 48 hours.
+To report a vulnerability, please contact us at [A01794998@tec.mx]. We commit to investigating all reports and will respond within 48 hours.
 
 ## Data Security Guidelines
 

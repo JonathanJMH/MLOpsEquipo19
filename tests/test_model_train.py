@@ -19,6 +19,12 @@ def trainer():
     return ModelTrainer(X_train_path,y_train_path,params)
 
 def test_load_data(trainer):
+    """
+    Test to verify that all expected features of X_train exist whithin it.
+
+    Args:
+        trainer (trainer): Temporary directory provided by pytest for storing output files.
+    """
     global params
 
     output_features = params['output_features']  # Expected output features
@@ -52,5 +58,6 @@ def test_handle_best_model(trainer):
         assert os.path.isdir(path)
         has_subfolders = any(os.path.isdir(os.path.join(path, item)) for item in os.listdir(path))
         assert has_subfolders, f"La carpeta '{path}' no contiene subcarpetas"
+        
 if __name__ == "__main__":
-    pytest.main([__file__])  # Run the tests when the script is executed
+    pytest.main([__file__])  # Run the tests

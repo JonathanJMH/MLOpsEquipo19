@@ -1,0 +1,196 @@
+paths:
+  raw: data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
+  data: data/processed/data.csv
+  params: params.yaml
+  split_X_data:
+  - data/processed/X_train.csv
+  - data/processed/X_test.csv
+  - data/processed/X_val.csv
+  split_y_data:
+  - data/processed/y_train.csv
+  - data/processed/y_test.csv
+  - data/processed/y_val.csv
+  model_path:
+  - models/best_model.pkl
+  mlflow_runs:
+  - mlruns/models
+version:
+
+data_adjusted:
+  round_decimals: {'Height' : 2, 'Weight' : 0, 'CH2O' : 0}
+  float_to_int : ['Weight', 'Age', 'FCVC', 'NCP', 'FAF', 'TUE', 'CH2O']
+  int_to_str : ['FCVC', 'NCP', 'FAF', 'TUE', 'CH2O']
+
+data_schema:
+  Gender:
+    dtype: object
+    allowed_values: 
+      - 'Female'
+      - 'Male'
+  Age:
+    range:
+      min: 14.0
+      max: 61.0
+    dtype: float
+  Height:
+    range:
+      min: 1.45
+      max: 1.98
+    dtype: float
+  Weight:
+    range:
+      min: 39.0
+      max: 173.0
+    dtype: float
+  family_history_with_overweight:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  FAVC:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  FCVC:
+    range:
+      min: 1.0
+      max: 3.0
+    dtype: float
+  NCP:
+    range:
+      min: 1.0
+      max: 4.0
+    dtype: float
+  CAEC:
+    dtype: object
+    allowed_values:
+      - 'Sometimes'
+      - 'Frequently'
+      - 'Always'
+      - 'no'
+  SMOKE:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  CH2O:
+    range:
+      min: 1.0
+      max: 3.0
+    dtype: float
+  SCC:
+    dtype: object
+    allowed_values: ['yes', 'no']
+  FAF:
+    range:
+      min: 0.0
+      max: 3.0
+    dtype: float
+  TUE:
+    range:
+      min: 0.0
+      max: 2.0
+    dtype: float
+  CALC:
+    dtype: object
+    allowed_values:
+      - 'no'
+      - 'Sometimes'
+      - 'Frequently'
+      - 'Always'
+  MTRANS:
+    dtype: object
+    allowed_values:
+      - 'Public_Transportation'
+      - 'Walking'
+      - 'Automobile'
+      - 'Motorbike'
+      - 'Bike'
+  NObeyesdad:
+    dtype: object
+    allowed_values: 
+      - 'Normal_Weight'
+      - 'Overweight_Level_I'
+      - 'Overweight_Level_II'
+      - 'Obesity_Type_I'
+      - 'Insufficient_Weight'
+      - 'Obesity_Type_II'
+      - 'Obesity_Type_III'
+
+split_options:
+  test_size : 0.2
+  val_size : 0.1
+  random_state: 1
+
+features:
+  ordinal: ['FCVC', 'NCP', 'CH2O', 'FAF', 'TUE', 'CALC']
+  categorical: ['Gender', 'family_history_with_overweight', 'FAVC', 'CAEC', 'SMOKE', 'SCC', 'MTRANS']
+  numerical: ['Height', 'Weight']
+  other: ['Age']
+  target: 'NObeyesdad'
+
+params:
+  - data
+  - data_adjusted
+  - split_options
+  - features
+  - model_and_data_global_options
+  - models
+  - version
+  - mlflow
+
+output_features: 
+  - Age
+  - Height
+  - Weight
+  - Gender_0
+  - Gender_1
+  - family_history_with_overweight_0
+  - family_history_with_overweight_1
+  - FAVC_0
+  - FAVC_1
+  - CAEC_0
+  - CAEC_1
+  - CAEC_2
+  - SMOKE_0
+  - SMOKE_1
+  - SCC_0
+  - SCC_1
+  - MTRANS_0
+  - MTRANS_1
+  - MTRANS_2
+  - FCVC
+  - NCP
+  - CH2O
+  - FAF
+  - TUE
+  - CALC
+
+models:
+  gradient_boosting :
+    learning_rate: [0.01, 0.1, 0.2]
+    max_depth: [3, 5, 7]
+    n_estimators: [100, 200]
+    random_state : [1]
+  logistic_regression :
+    multi_class : ['multinomial']
+    solver : ['lbfgs', 'saga']
+    max_iter : [1000]
+    random_state : [1]
+    C: [0.1, 1, 10, 100]
+  svm :
+    probability : [True]
+    random_state : [1]
+    C: [0.1, 1, 10]
+    kernel: ['linear', 'rbf']
+    gamma: [1, 0.1, 0.01]
+  random_forest :
+    random_state : [1]
+    n_estimators : [100, 200, 300]
+    max_depth : [None, 10, 20, 30]
+    min_samples_split : [2, 5, 10]
+    min_samples_leaf : [1, 2, 4]
+  k_neighbors :
+    n_neighbors : [3, 5, 7, 9]
+    weights : ['uniform', 'distance']
+    p: [1, 2]
+
+mlflow:
+  experiment_name: "Obesity_Level_Model_Analysis"
+  test_name : 'Obesity_Level_Model_Testing'
+  tracking_uri: "http://localhost:5000"

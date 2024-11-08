@@ -15,17 +15,27 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
-
 from refactoring.config.load_params import load_params
 
 class ModelTrainer:
     def __init__(self, X_train_path, y_train_path, params):
+        """
+        Initializes the ModelTrainer with paths to training data and parameters.
+
+        Args:
+            X_train_path (str): Path to the training features (X_train) CSV file.
+            y_train_path (str): Path to the training labels (y_train) CSV file.
+            params (dict): Dictionary of parameters for model training.
+        """
         self.X_train_path = X_train_path
         self.y_train_path = y_train_path
         self.params = params
         self.initialize_params()
         
     def initialize_params(self):
+        """
+        Initializes specific training parameters from configuration.
+        """
         self.version = self.params['version']
         self.version_suffix = f"_{self.version}" if self.version is not None else ""
         self.experiment_name = self.params['mlflow']['experiment_name'] + self.version_suffix
@@ -34,18 +44,34 @@ class ModelTrainer:
         return self
 
     def load_data(self):
+        """
+        Loads the training features and labels from CSV files.
+
+        Returns:
+            tuple: A tuple containing the training features (X_train) and labels (y_train).
+        """
         X_train = pd.read_csv(self.X_train_path)
         y_train = pd.read_csv(self.y_train_path).values.ravel()
         return X_train, y_train 
-    
-    def train_and_evaluate(self,X_train,y_train):
+
+    def train_and_evaluate(self, X_train, y_train):
+        """
+        Trains and evaluates multiple models based on specified parameter grids.
+
+        Args:
+            X_train (DataFrame): The training features.
+            y_train (array-like): The training labels.
+
+        Returns:
+            tuple: A tuple containing the best model, its name, best parameters, and run ID.
+        """
         best_model = None
         best_score = 0
         best_model_name = ""
         best_params = {}
         best_run_id = None
         
-        mlflow.set_experiment(experiment_name = self.experiment_name)
+        mlflow.set_experiment(experiment_name=self.experiment_name)
         
         for model_name, param_grid in self.models.items():
             if model_name == 'gradient_boosting':
@@ -63,25 +89,27 @@ class ModelTrainer:
                 continue  # Skip unknown models
 
             grid_search = GridSearchCV(
-                estimator = model,
-                param_grid = param_grid,
-                scoring ='accuracy',
+                estimator=model,
+                param_grid=param_grid,
+                scoring='accuracy',
                 cv=5,
                 n_jobs=-1,
                 verbose=1
             )
 
-            grid_search.fit(X_train,y_train)
+            grid_search.fit(X_train, y_train)
             accuracy = grid_search.best_score_
 
             print(f"{model_name} Best accuracy: {accuracy}")
 
-            run_id = self.log_model_and_metrics(model = grid_search.best_estimator_,
-                                                X_train = X_train,
-                                                y_train = y_train,
-                                                model_name= model_name,
-                                                best_params= grid_search.best_params_,
-                                                accuracy = accuracy)
+            run_id = self.log_model_and_metrics(
+                model=grid_search.best_estimator_,
+                X_train=X_train,
+                y_train=y_train,
+                model_name=model_name,
+                best_params=grid_search.best_params_,
+                accuracy=accuracy
+            )
 
             if accuracy > best_score:
                 best_score = accuracy
@@ -93,8 +121,22 @@ class ModelTrainer:
         return best_model, best_model_name, best_params, best_run_id
     
     def log_model_and_metrics(self, model, X_train, y_train, model_name, best_params, accuracy):
+        """
+        Logs the trained model and evaluation metrics to MLflow.
+
+        Args:
+            model (object): The trained model to log.
+            X_train (DataFrame): The training features.
+            y_train (array-like): The training labels.
+            model_name (str): The name of the model being logged.
+            best_params (dict): The best hyperparameters found for the model.
+            accuracy (float): The cross-validated accuracy of the model.
+
+        Returns:
+            str: The run ID of the logged model.
+        """
         mlflow.set_experiment(self.experiment_name)
-        with mlflow.start_run(run_name=model_name) as run:  # Usa el contexto como 'run'
+        with mlflow.start_run(run_name=model_name) as run:  # Uses the context as 'run'
             run_id = run.info.run_id
 
             input_example = X_train.head(1)
@@ -103,26 +145,41 @@ class ModelTrainer:
             mlflow.set_tag('model_name', model_name)
 
             y_train_pred = model.predict(X_train)
-            train_accuracy = accuracy_score(y_train,y_train_pred)
-            train_prec = precision_score(y_train,y_train_pred, average='weighted')
-            train_rec = recall_score(y_train,y_train_pred, average='weighted')
+            train_accuracy = accuracy_score(y_train, y_train_pred)
+            train_prec = precision_score(y_train, y_train_pred, average='weighted')
+            train_rec = recall_score(y_train, y_train_pred, average='weighted')
 
-            mlflow.log_metrics({'accuracy': train_accuracy,
-                                'cv_accuracy': accuracy,
-                                'precision': train_prec,
-                                'recall':train_rec})
+            mlflow.log_metrics({
+                'accuracy': train_accuracy,
+                'cv_accuracy': accuracy,
+                'precision': train_prec,
+                'recall': train_rec
+            })
             
-            mlflow.sklearn.log_model(sk_model = model,
-                                     artifact_path = 'model',
-                                     input_example = input_example)
+            mlflow.sklearn.log_model(sk_model=model,
+                                     artifact_path='model',
+                                     input_example=input_example)
             return run_id
 
     def tag_best_model(self, best_run_id):
+        """
+        Tags the best model run as the best model in MLflow.
+
+        Args:
+            best_run_id (str): The run ID of the best model.
+        """
         client = mlflow.tracking.MlflowClient()
         client.set_tag(best_run_id, "best_model", "True")
         print(f"Best model run ID: {best_run_id} tagged as best_model.")
 
     def register_best_model(self, best_run_id, model_name="BestModel"):
+        """
+        Registers the best model in the MLflow Model Registry.
+
+        Args:
+            best_run_id (str): The run ID of the best model.
+            model_name (str): The name to register the model under.
+        """
         model_uri = f"runs:/{best_run_id}/model"
         result = mlflow.register_model(model_uri, model_name)
         print(f"Registered model '{model_name}' with version {result.version}")
@@ -136,13 +193,24 @@ class ModelTrainer:
         print(f"Model '{model_name}' version {result.version} transitioned to 'Production' stage.")
 
     def save_best_model(self, model):
+        """
+        Saves the best model to a file.
+
+        Args:
+            model (object): The best trained model to save.
+        """
         os.makedirs("models", exist_ok=True)
         joblib.dump(model, f"models/best_model{self.version_suffix}.pkl")
 
     def run_trainer(self):
+        """
+        Executes the training process, loading data, training models, and logging results.
+        """
         X_train, y_train = self.load_data()
-        best_model, best_model_name, best_params, best_run_id = self.train_and_evaluate(X_train = X_train,
-                                                                                        y_train = y_train)
+        best_model, best_model_name, best_params, best_run_id = self.train_and_evaluate(
+            X_train=X_train,
+            y_train=y_train
+        )
         print(f"Best model: {best_model_name} with params: {best_params}")
         self.save_best_model(best_model)
 
@@ -156,6 +224,7 @@ if __name__ == '__main__':
     parser.add_argument("--y_train_path", type=str, help="Path to y_train.csv")
     parser.add_argument("--params", type=str, default="params.yaml", help="Path to params.yaml")
     args = parser.parse_args()
+    
     params = load_params(args.params)
     MLFLOW_TRACKING_URI = params['mlflow']['tracking_uri']
     Trainer = ModelTrainer(args.X_train_path, args.y_train_path, params)

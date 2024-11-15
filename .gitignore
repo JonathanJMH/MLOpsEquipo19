@@ -4,6 +4,9 @@
 #!data/raw/ObesityDataSet_raw_and_data_sinthetic.csv
 #!data/preprocessed/data.csv
 
+#VsCode Config
+.vscode/
+
 # Excepto los archivos .dvc
 !data/**/*.dvc
 

@@ -171,9 +171,9 @@ def test_mean_std_dev_num_pip(preprocessor):
     assert abs(data_other.mean()) < 1e-6, f"The mean of '{data_other}' is not approximately 0. Found: {mean}"
     assert abs(std_dev - 1) <= 1e-6, f"The standard deviation of '{data_other}' is not approximately 1. Found: {std_dev}"
 
-def test_mean_std_dev(preprocessor):
+def test_log_pip_data(preprocessor):
     """
-    Test to verify that the numeric data u.
+    Test to verify that numeric entries from data used in log pipeline are bigger than 0 .
 
     Args:
         preprocessor (DataPreprocessor): The DataPreprocessor instance used to preprocess the data.

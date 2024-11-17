@@ -1,0 +1,1 @@
+# Ignorar carpetas del sistema y del usuario/Library//Applications//System//Users/Shared//Volumes/.Trash/# Ignorar archivos temporales*.log*.tmp*.DS_Store# Ignorar configuraciones de IDE y editores de texto.vscode/.idea/*.swp# Ignorar repositorios embebidosAnlisisdise-o-y-construccin-de-software/# Ignorar entorno virtual Pythonenv/

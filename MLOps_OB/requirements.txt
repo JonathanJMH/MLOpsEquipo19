@@ -1,0 +1,9 @@
+streamlit
+fastapi
+pandas
+scikit-learn
+mlflow
+uvicorn
+boto3
+psycopg2-binary
+plotly

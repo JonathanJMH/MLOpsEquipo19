@@ -30,6 +30,8 @@ This project is a full MLOps pipeline that uses DVC for tracking data and models
 ├── Makefile
 ├── params.yaml
 ├── README.md
+├── requierements.txt
+├── requierements2.txt
 ├── .dvc/
 ├── .vscode/
 ├── data
@@ -40,6 +42,7 @@ This project is a full MLOps pipeline that uses DVC for tracking data and models
 │   └── raw/
 ├── docs/
 ├── metrics/
+├── MLOps_OB/
 ├── mlruns/
 ├── models/
 ├── notebooks/
@@ -167,6 +170,21 @@ You can monitor **MLflow experiment runs**, metrics, and models, which helps you
 ```bash
 mlflow ui
 ```
+### **8. Launch the API with Streamlit**
+Check the existence of Docker files in the `MLOps_OB` folder.
+
+```bash
+cd MLOps_OB
+```
+
+```bash
+docker-compose up
+```
+
+This will build and start the services specified in the docker-compose.yml file.
+
+With this, you should be able to easily run your Streamlit and FastAPI applications in separate Docker containers!
+
 ## Governance Practices
 - [Project Governance](docs/docs/GOVERNANCE.md)
 - [Security Policy](docs/docs/SECURITY.md)
